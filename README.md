@@ -11,3 +11,4 @@ python run.py
 
 ## Currently modelled scheduling methods: 
 Round Robin
+First Come First Served
