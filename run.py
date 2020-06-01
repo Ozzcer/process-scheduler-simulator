@@ -35,12 +35,19 @@ def getProcessLengths(scheduler):
 
 
 def getSchedulingMethod():
-    print("Scheduling methods:\n---------------------------\nRR = Round Robin\n---------------------------")
+    schedulingMethods = [["FCFS", "First Come First Served"],["RR","Round Robin"]]
+
+    print("Scheduling methods:\n---------------------------")
+    for method in schedulingMethods:
+        print(method[0]+" = "+method[1])
+    print("---------------------------")
 
     schedulingMethod = "notSpecified"
     while schedulingMethod == "notSpecified":
         schedulingMethod = userInput("Please enter the desired scheduling method: ").upper()
         if schedulingMethod == "RR":
+            return schedulingMethod
+        elif schedulingMethod=="FCFS":
             return schedulingMethod
         else:
             print("Not a valid scheduling method, type exit to leave.")
@@ -74,13 +81,15 @@ def getPrintEachStep():
         else:
             print("Not valid input, type exit to leave.")
     
-    return True if getPrintEachStep=="Y" else False
+    return True if printEachStep == "Y" else False
 
 def runSchedule():
+    timeSlice = -1
     schedulingMethod = getSchedulingMethod()
-    timeSlice = getTimeSlice()
+    if schedulingMethod != ("FCFS"):
+        timeSlice = getTimeSlice()
     printEachStep = getPrintEachStep()
-
+    
     scheduler.schedule(schedulingMethod,timeSlice,printEachStep)
 
     print("\n---------------------------\nFinal:\n" +str(scheduler))

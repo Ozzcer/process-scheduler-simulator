@@ -1,4 +1,6 @@
 import operator
+
+
 class Process:
     def __init__(self, id, length):
         self.id = id
@@ -15,10 +17,10 @@ class Process:
 
     def wait(self, timeProcessed):
         self.timeWaiting += timeProcessed
-    
+
     def finish(self):
-        self.timeToProcess = self.timeProcessed+ self.timeWaiting
-    
+        self.timeToProcess = self.timeProcessed + self.timeWaiting
+
     def reset(self):
         self.timeWaiting = 0
         self.timeProcessed = 0
@@ -35,11 +37,13 @@ class Scheduler:
     def __str__(self):
         output = "---------------------------\nReady Processes:"
         for process in self.readyProcesses:
-            output += "\nProcess " + str(process.id) + ": [length: " + str(process.length) +", timeProcessed: " + str(process.timeProcessed) + ", timeWaiting: " + str(process.timeWaiting)  +", timeToProcess: "+ str(process.timeToProcess) + "]"
+            output += "\nProcess " + str(process.id) + ": [length: " + str(process.length) + ", timeProcessed: " + str(
+                process.timeProcessed) + ", timeWaiting: " + str(process.timeWaiting) + ", timeToProcess: " + str(process.timeToProcess) + "]"
         output += "\nDone Processes:"
         for process in self.doneProcesses:
-            output += "\nProcess " + str(process.id) + ": [length: " + str(process.length) +", timeProcessed: " + str(process.timeProcessed) + ", timeWaiting: " + str(process.timeWaiting)  +", timeToProcess: "+ str(process.timeToProcess) + "]"
-        output+="\n---------------------------"
+            output += "\nProcess " + str(process.id) + ": [length: " + str(process.length) + ", timeProcessed: " + str(
+                process.timeProcessed) + ", timeWaiting: " + str(process.timeWaiting) + ", timeToProcess: " + str(process.timeToProcess) + "]"
+        output += "\n---------------------------"
         return output
 
     def addProcess(self, processLength):
@@ -47,24 +51,24 @@ class Scheduler:
             Process(self.readyProcessCount, processLength))
         self.readyProcessCount += 1
 
-    def transitionProcess(self, process):
+    def _transitionProcess(self, process):
         self.doneProcesses.append(process)
         self.readyProcesses.remove(process)
         self.readyProcessCount -= 1
         self.currentProcessCounter -= 1
         process.finish()
 
-    def waitOtherProcesses(self, waitTime, currentProccess):
+    def _waitOtherProcesses(self, waitTime, currentProccess):
         for process in self.readyProcesses:
             if process != currentProccess:
                 process.wait(waitTime)
-    
+
     def sortDoneByProcessId(self):
         self.doneProcesses.sort(key=operator.attrgetter('id'))
 
     def sortReadyByProcessId(self):
         self.readyProcesses.sort(key=operator.attrgetter('id'))
-    
+
     def reset(self):
         for process in self.doneProcesses:
             self.readyProcesses.append(process)
@@ -78,48 +82,59 @@ class Scheduler:
     def totalWaitTime(self):
         totalWaitTime = 0
         for process in self.doneProcesses:
-            totalWaitTime+= process.timeWaiting
+            totalWaitTime += process.timeWaiting
         return totalWaitTime
-    
+
     def averageWaitTime(self):
         return self.totalWaitTime()/len(self.doneProcesses)
-        
+
     def totalProcessingTime(self):
         totalProcessingTime = 0
         for process in self.doneProcesses:
-            totalProcessingTime+= process.timeToProcess
+            totalProcessingTime += process.timeToProcess
         return totalProcessingTime
-    
+
     def averageProcessingTime(self):
         return self.totalProcessingTime() / len(self.doneProcesses)
 
-    def RR_process(self, timeSlice, printEachRound):
+    def _RR_process(self, timeSlice, printEachRound):
         processTimeRemaining = 0
         waitTime = 0
-        currentProccess = None
+        currentProcess = None
 
         while (len(self.readyProcesses) > 0):
             if self.currentProcessCounter == self.readyProcessCount:
                 self.currentProcessCounter = 0
-            
-            # print(self.currentProcessCounter)
-            # print(self.readyProcessCount)
-            # print(len(self.readyProcesses))
-            
-            currentProccess = self.readyProcesses[self.currentProcessCounter]
-            processTimeRemaining = currentProccess.process(timeSlice)
+
+            currentProcess = self.readyProcesses[self.currentProcessCounter]
+            processTimeRemaining = currentProcess.process(timeSlice)
 
             if processTimeRemaining <= 0:
-                self.transitionProcess(currentProccess)
-                
+                self._transitionProcess(currentProcess)
+
             waitTime = timeSlice if processTimeRemaining >= 0 else timeSlice + processTimeRemaining
-            self.waitOtherProcesses(waitTime,currentProccess)
+            self._waitOtherProcesses(waitTime, currentProcess)
 
             self.currentProcessCounter += 1
+
+            if printEachRound:
+                print(self)
+
+    def _FCFS_process(self, printEachRound):
+        currentProcess = None
+
+        while (len(self.readyProcesses) > 0):
+            currentProcess = self.readyProcesses[0]
+            self.readyProcesses[0].process(currentProcess.length)
+            self._transitionProcess(currentProcess)
+            self._waitOtherProcesses(currentProcess.length, currentProcess)            
             
             if printEachRound:
                 print(self)
-    
-    def schedule(self, method, timeSlice, printEachRound):
+
+
+    def schedule(self, method, timeSlices, printEachRound):
         if method == "RR":
-            self.RR_process(timeSlice,printEachRound)
+            self._RR_process(timeSlices, printEachRound)
+        elif method == "FCFS":
+            self._FCFS_process(printEachRound)
