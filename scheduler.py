@@ -72,6 +72,8 @@ class Scheduler:
             process.reset()
         self.sortReadyByProcessId()
         self.doneProcesses.clear()
+        self.readyProcessCount = len(self.readyProcesses)
+        self.currentProcessCounter = 0
 
     def totalWaitTime(self):
         totalWaitTime = 0

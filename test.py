@@ -21,7 +21,7 @@ scheduler.RR_process(5, False)
 
 print("Final:\n" +str(scheduler))
 print("Wait times:\n---------------------------\nTotal wait time: "+ str(scheduler.totalWaitTime()) + "\nAverage wait time: " + str(scheduler.averageWaitTime()) + "\n---------------------------")
-print("Processing times:\n---------------------------\nTotal Processing time: "+ str(scheduler.totalProcessingTime()) + "\nAverage Processing time: " + str(scheduler.averageProcessingTime) + "\n---------------------------")
+print("Processing times:\n---------------------------\nTotal Processing time: "+ str(scheduler.totalProcessingTime()) + "\nAverage Processing time: " + str(scheduler.averageProcessingTime()) + "\n---------------------------")
 
 print("Sort:")
 scheduler.sortDoneByProcessId()
@@ -30,3 +30,27 @@ print(scheduler)
 print("Reset:")
 scheduler.reset()
 print(scheduler)
+
+
+scheduler.RR_process(5, False)
+print("Wait times:\n---------------------------\nTotal wait time: "+ str(scheduler.totalWaitTime()) + "\nAverage wait time: " + str(scheduler.averageWaitTime()) + "\n---------------------------")
+print("Processing times:\n---------------------------\nTotal Processing time: "+ str(scheduler.totalProcessingTime()) + "\nAverage Processing time: " + str(scheduler.averageProcessingTime()) + "\n---------------------------")
+
+scheduler.reset()
+
+scheduler.RR_process(10, False)
+print("Wait times:\n---------------------------\nTotal wait time: "+ str(scheduler.totalWaitTime()) + "\nAverage wait time: " + str(scheduler.averageWaitTime()) + "\n---------------------------")
+print("Processing times:\n---------------------------\nTotal Processing time: "+ str(scheduler.totalProcessingTime()) + "\nAverage Processing time: " + str(scheduler.averageProcessingTime()) + "\n---------------------------")
+
+scheduler.reset()
+
+scheduler.RR_process(15, False)
+print("Wait times:\n---------------------------\nTotal wait time: "+ str(scheduler.totalWaitTime()) + "\nAverage wait time: " + str(scheduler.averageWaitTime()) + "\n---------------------------")
+print("Processing times:\n---------------------------\nTotal Processing time: "+ str(scheduler.totalProcessingTime()) + "\nAverage Processing time: " + str(scheduler.averageProcessingTime()) + "\n---------------------------")
+
+
+scheduler.reset()
+
+scheduler.RR_process(20, False)
+print("Wait times:\n---------------------------\nTotal wait time: "+ str(scheduler.totalWaitTime()) + "\nAverage wait time: " + str(scheduler.averageWaitTime()) + "\n---------------------------")
+print("Processing times:\n---------------------------\nTotal Processing time: "+ str(scheduler.totalProcessingTime()) + "\nAverage Processing time: " + str(scheduler.averageProcessingTime()) + "\n---------------------------")
